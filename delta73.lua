@@ -9,6 +9,10 @@ local function _print(...)
 end
 print = _print
 
+
+
+
+
 local _b64c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 local _b64i = {}
 for i = 1, #_b64c do _b64i[_b64c:sub(i, i)] = i - 1 end
@@ -149,9 +153,17 @@ local vm_src = b64dec(VM_SRC_B64)
 local bytecode = b64dec(BYTECODE_B64)
 print("[*] VM=" .. #vm_src .. " BC=" .. #bytecode)
 
+-- bit32 is expected to be available; if not present in Delta then this script won't run VM init.
+if bit32 == nil then
+  print("[!] bit32 IS NIL — VM may fail. Add bit32 library support to your executor.")
+end
+
+-- coroutine shim
+if not coroutine.create or not coroutine.resume then
+  -- fallback if needed
+end
+
 -- DELTA73 trace injection
-local _TRACE_MAX = 5000
-local _trace_count = 0
 
 local patched = vm_src
 local slow_marker = "repeat local V=o[d];"
@@ -164,11 +176,10 @@ print("[*] Slow-path marker at " .. slow_pos)
 
 local TRACE_CODE = [==[
 do
-  _trace_count = _trace_count + 1
-  if _trace_count > _TRACE_MAX then error("__MAX_END") end
-  local _zz = z[d]
-  local _rr = R[d]
-  local _qq = q[d]
+  if OPR_COUNT == nil then OPR_COUNT = 0; OPR_MAX = 8000 end
+  OPR_COUNT = OPR_COUNT + 1
+  if OPR_COUNT > OPR_MAX then error("OPR_MAX_HIT") end
+
   local _s = ""
   local _rmax = S
   if type(_rmax) ~= "number" then _rmax = 50 end
@@ -177,39 +188,30 @@ do
     if _v == nil then _s = _s .. "_, "
     else
       local _t = type(_v)
-      if _t == "number" then _s = _s .. tostring(_v) .. ", "      elseif _t == "string" then _s = _s .. "[" .. _v:sub(1, 20):gsub("\n","L"):gsub("\r","R"):gsub("|","P") .. "], "
+      if _t == "number" then _s = _s .. tostring(_v) .. ", "
+      elseif _t == "string" then _s = _s .. "[" .. _v:sub(1, 25):gsub("\n","L"):gsub("|","P") .. "], "
       elseif _t == "function" then _s = _s .. "fn, "
       elseif _t == "boolean" then _s = _s .. tostring(_v) .. ", "
-      elseif _t == "table" then
-        local _c = 0
-        for _ in pairs(_v) do _c = _c + 1 end
-        _s = _s .. "t" .. tostring(_c) .. ", "
-      else
-        local _cn = nil
-        pcall(function() _cn = _v.ClassName end)
-        _cn = _cn or _t
-        _s = _s .. "u:" .. tostring(_cn) .. ", "
+      elseif _t == "table" then local _c = 0; for _ in pairs(_v) do _c = _c + 1 end; _s = _s .. "t" .. tostring(_c) .. ", "
+      else local _cn = nil; pcall(function() _cn = _v.ClassName end); _s = _s .. "u:" .. tostring(_cn or _t) .. ", "
       end
     end
   end
-  local _rz = "-"
-  if _zz ~= nil then
-    local _tt = type(_zz)
-    if _tt == "string" then _rz = "S:" .. _zz:sub(1, 40):gsub("\n","L"):gsub("|","P")
-    elseif _tt == "number" then _rz = "N:" .. tostring(_zz)
-    end
+  local _z = "-"
+  if z[d] ~= nil then
+    if type(z[d]) == "string" then _z = "S:" .. z[d]:sub(1, 40):gsub("\n","L"):gsub("|","P")
+    elseif type(z[d]) == "number" then _z = "N:" .. tostring(z[d]) end
   end
-  local _rrs = "-"
-  if _rr ~= nil then
-    local _rt = type(_rr)
-    if _rt == "string" then _rrs = "S:" .. _rr:sub(1, 60):gsub("\n","L"):gsub("|","P")
-    elseif _rt == "number" then _rrs = "N:" .. tostring(_rr)
-    elseif _rt == "table" then _rrs = "T:" .. tostring(_rr)
-    end
+  local _q = "-"
+  if q[d] ~= nil then _q = "T:" .. tostring(q[d]) end
+  local _r = "-"
+  if R[d] ~= nil then
+    if type(R[d]) == "string" then _r = "S:" .. R[d]:sub(1, 60):gsub("\n","L"):gsub("|","P")
+    elseif type(R[d]) == "number" then _r = "N:" .. tostring(R[d])
+    elseif type(R[d]) == "table" then _r = "T:" .. tostring(R[d]) end
   end
-  local _rqs = "-"
-  if _qq ~= nil then _rqs = "T:" .. tostring(_qq) end
-  _print(string.format("%d,%d,%d,%d,%d,%s,%s,%s,%s", d, V, M[d] or -1, P[d] or -1, Y[d] or -1, _rz, _rqs, _rrs, _s))
+  print(string.format("OPR|%d|%d|%d|%d|%d|%s|%s|%s|%s",
+    d, V, M[d] or -1, P[d] or -1, Y[d] or -1, _z, _q, _r, _s))
 end;
 ]==]
 
@@ -218,28 +220,7 @@ print("[*] Patched. New vm_src size: " .. #patched)
 
 local fn, ferr = loadstring(patched, "inner_vm")
 -- Make outer locals visible inside the loaded function (Luau: setfenv)
-if fn then
-  local _env = setmetatable({}, {
-    __index = function(t, k)
-      if k == "_TRACE_MAX" then return _TRACE_MAX
-      elseif k == "_trace_count" then return _trace_count
-      elseif k == "_print" then return _print
-      elseif k == "_out" then return _out
-      end
-      return _G[k]
-    end,
-    __newindex = function(t, k, v)
-      if k == "_trace_count" then
-        _trace_count = v  -- write back to upvalue
-      elseif k == "_TRACE_MAX" then
-        _TRACE_MAX = v
-      else
-        rawset(t, k, v)
-      end
-    end
-  })
-  if setfenv then setfenv(fn, _env) end
-end
+
 if not fn then
   print("[!] loadstring failed: " .. tostring(ferr));
   -- try with verbose compile error position
@@ -251,15 +232,14 @@ if not fn then
 end
 
 print("[*] running...")
+
 local buf = buffer.fromstring(bytecode)
 local ok, err = pcall(fn, buf)
 print(string.format("[*] result: ok=%s err=%s", tostring(ok), tostring(err):sub(1, 200)))
 print(string.format("[*] trace entries: %d", #_out))
 
 -- Also print the first few / last few trace entries
-print("=== last 5 entries ===")
-local _from = math.max(1, #_out - 4);
-for _i = _from, #_out do print(_out[_i]) end
+print("[*] Total _out lines: " .. #_out)
 
 
 print("")
