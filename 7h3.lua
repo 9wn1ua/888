@@ -121,15 +121,8 @@ local w=...;return({Y=unpack,X=coroutine,Xo=function(a,a)a=1.0;return a;end,b9=f
   if not __stopA then
     local _emit = false
     local _gc = __gcount[g]
-    if _gc < 3 then
-      _emit = true
-    end
+    _emit = true
     __gcount[g] = _gc + 1
-    local _done = true
-    for _gi = 0, 13 do
-      if __gcount[_gi] < 3 then _done = false; break end
-    end
-    if _done then __stopA = true end
     -- Check if all opcodes sampled
     local _allDone = true
     for _gi = 0, 13 do
