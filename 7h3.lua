@@ -87,7 +87,9 @@ local w=...;return({Y=unpack,X=coroutine,Xo=function(a,a)a=1.0;return a;end,b9=f
     writefile("8je.txt", "")
   end
   __tcA = __tcA + 1
-  if __tcA > __tmaxA then __stopA = true end
+  if __tcA > __tmaxA then error("LIMIT_A") end
+  if not __tStartA then __tStartA = tick() end
+  if tick() - __tStartA > 5 then error("TIMEUP_A") end
   local _s = ""
   local _rmax = 30
   for _r = 1, _rmax do
