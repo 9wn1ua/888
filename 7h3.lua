@@ -327,6 +327,10 @@ do
   end
 end
 print("[*] A traced:", __tcA or 0, "written:", __written or 0)
+print("[*] M count:", __tcM or 0)
+print("[*] B count:", __tcB or 0)
+print("[*] C count:", __tcC or 0)
+print("[*] D count:", __tcD or 0)
 for _g = 0, 13 do
   print("[*] g=" .. _g, "count:", __gcount[_g] or 0)
 end
