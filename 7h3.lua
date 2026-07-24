@@ -1,6 +1,6 @@
 -- d740.lua - Luraph VM full dispatcher trace
 -- Traces ALL 5 VM dispatchers: MAIN, VA, VB, VC, VD
--- Use in Delta executor. Output saved to d740_output.txt
+-- Use in Delta executor. Output saved to 8je.txt
 
 local _out = {}
 local _oprint = print
@@ -89,7 +89,7 @@ local w=...;return({Y=unpack,X=coroutine,Xo=function(a,a)a=1.0;return a;end,b9=f
   __tcA = __tcA + 1
   if __tcA > __tmaxA then error("LIMIT_A") end
   if not __tStartA then __tStartA = tick() end
-  if tick() - __tStartA > 8 then error("TIMEUP_A") end
+  if tick() - __tStartA > 10 then error("TIMEUP_A") end
   local _s = ""
   local _rmax = 30
   for _r = 1, _rmax do
@@ -145,8 +145,6 @@ local w=...;return({Y=unpack,X=coroutine,Xo=function(a,a)a=1.0;return a;end,b9=f
 end;if g<7 then if not(g<3)then if x[41]~=x[42]then else return b;end;if g<5 then if g~=4 then if i[P[C]]==q[C]then else C=(M[C]);end;else if x[17]==f then else i[3.0]=(z[C]);C+=1.0;i[4.0]=q[C];C+=1.0;(i)[5.0]=(p[P[C]]);C+=1.0;(i)[5.0]=#i[5.0];C+=1.0;(i)[6.0]=(q[C]);end;C+=1.0;s={[5]=A,[3]=E,[2]=c,[1]=s};A=i[6.0];c=(i[5.0]);E=i[4.0]-A;C=P[C];end;else if g==6 then if x[42]~=x[37]then i[3.0]=Z[z[C]];C+=1.0;(i)[4.0]=(i[2.0]);end;C+=1.0;(i)[5.0]=(z[C]);C+=1.0;(i)[3.0]=i[3.0](i[4.0],i[5.0]);W=3.0;C+=1.0;if x[33]==x[42]then return;elseif not i[3.0]then C=P[C];end;else if x[5]~=x[40]then(i)[3.0]=p[P[C]];end;C+=1.0;if x[42]==x[20]then return;end;(i)[4.0]=z[C];C+=1.0;i[3.0](i[4.0]);W=2.0;C+=1.0;(i)[3.0]=(Z[z[C]]);C+=1.0;(i)[3.0]=(i[3.0][q[C]]);C+=1.0;(i)[4.0]=q[C];C+=1.0;i[3.0](i[4.0]);W=2.0;C+=1.0;C=Y[C];end;end;else if g>=1 then if g==2 then C=Y[C];else i[6.0]=(z[C]);C+=1.0;i[7.0]=(q[C]);C+=1.0;(i)[8.0]=(q[C]);C+=1.0;s={[5]=A,[3]=E,[2]=c,[1]=s};A=(i[8.0]);c=(i[7.0]);E=i[6.0]-A;C=P[C];end;else i[10.0]=(Z[z[C]]);C+=1.0;i[10.0]=i[10.0][q[C]];C+=1.0;(i)[11.0]=(i[5.0]);C+=1.0;if x[4]==x[20]then while x[40]do v=x[31];return x[45];end;while d do return;end;elseif x[48]==x[17]then while x[44]do return-214*-117;end;elseif f then for U,Q in f do if not(U>=1.0)then else(Q)[1]=(Q);(Q)[2]=i[U];(Q)[3]=(2);f[U]=nil;end;end;end;return i[10.0](i[11.0]);end;end;else if g>=10 then if x[43]==x[42]then repeat(x)[37],x[48]=65,b;until false;end;if g>=12 then if g~=13 then E=(s[3]);c=s[2];A=(s[5]);s=(s[1]);else if x[46]==x[25]then f=(179);end;b=(false);E+=A;if not(A<=0.0)then b=(E<=c);else b=E>=c;end;if not(b)then else(i)[M[C]+3.0]=(E);C=Y[C];end;end;else if g~=11 then if x[47]~=x[38]then i[8.0]=Z[z[C]];end;C+=1.0;(i)[8.0]=i[8.0][q[C]];C+=1.0;i[9.0]=Z[q[C]];C+=1.0;i[9.0]=i[9.0][z[C]];C+=1.0;i[10.0]=i[3.0];C+=1.0;(i)[11.0]=(z[C]);C+=1.0;i[9.0]=i[9.0](i[10.0],i[11.0]);W=9.0;C+=1.0;(i)[10.0]=p[P[C]];C+=1.0;b=(i[10.0]);(i)[11.0]=b;i[10.0]=b[R[C]];C+=1.0;i[12.0]=(i[7.0]);C+=1.0;W=12.0;d,v=x[49](i[10.0](x[20](11.0,W,i)));d+=9.0;W=d;b=0.0;for U=10.0,d do b+=1.0;i[U]=v[b];end;C+=1.0;(i)[8.0]=i[8.0](x[20](9.0,W,i));W=(8.0);C+=1.0;i[3.0]=i[8.0];C+=1.0;C=(Y[C]);else if f==x[33]then while x[20]do(x)[32]=(28);end;if 229%126>=x[20]then x[49]=x[42];end;end;if x[20]==x[42]then else(i)[3.0]=Z[z[C]];C+=1.0;i[4.0]=i[2.0];C+=1.0;(i)[3.0]=i[3.0](i[4.0]);W=3.0;end;C+=1.0;if i[3.0]~=q[C]then else C=(M[C]);end;end;end;else if not(g>=8)then if x[44]~=x[38]then else if 98 then return x[49];end;return x[38];end;if x[30]==x[5]then if-157%x[32]then(x)[48],x[47]=x[30],x[32];end;while x[31]do return x[18];end;end;if x[44]==x[38]then while x[38]do return x[48];end;(x)[37],x[48]=90,-209;end;if x[30]==x[45]then if x[30]then x[46]=x[41];end;return;end;E=s[3];c=s[2];A=s[5];s=(s[1]);C+=1.0;i[4.0]=x[1](16.0);C+=1.0;(i)[5.0]=(z[C]);C+=1.0;i[6.0]=(q[C]);C+=1.0;i[7.0]=(q[C]);C+=1.0;i[8.0]=(q[C]);C+=1.0;(i)[9.0]=(q[C]);C+=1.0;(i)[10.0]=q[C];C+=1.0;(i)[11.0]=q[C];C+=1.0;(i)[12.0]=(q[C]);C+=1.0;i[13.0]=(q[C]);C+=1.0;(i)[14.0]=(q[C]);C+=1.0;i[15.0]=q[C];C+=1.0;(i)[16.0]=(q[C]);C+=1.0;i[17.0]=(q[C]);C+=1.0;(i)[18.0]=q[C];C+=1.0;i[19.0]=(q[C]);C+=1.0;i[20.0]=q[C];C+=1.0;b=i[4.0];(x[34])(i,5.0,20.0,1.0,b);C+=1.0;i[5.0]=Z[z[C]];C+=1.0;i[5.0]=(i[5.0][q[C]]);C+=1.0;i[6.0]=(#i[1.0]);C+=1.0;(i)[6.0]=(i[6.0]*z[C]);C+=1.0;(i)[5.0]=i[5.0](i[6.0]);W=5.0;C+=1.0;i[6.0]=(q[C]);C+=1.0;i[7.0]=#i[1.0];C+=1.0;i[8.0]=q[C];C+=1.0;s={[5]=A,[3]=E,[2]=c,[1]=s};A=(i[8.0]);c=(i[7.0]);E=(i[6.0]-A);C=P[C];else if g==9 then if x[40]==x[38]then(x)[43],x[43]=x[44],(243);end;if x[31]==x[42]then while x[39]do return;end;end;if x[5]==x[45]then else(i)[10.0]=(Z[z[C]]);C+=1.0;(i)[10.0]=i[10.0][q[C]];C+=1.0;i[11.0]=Z[q[C]];C+=1.0;(i)[11.0]=(i[11.0][z[C]]);C+=1.0;i[12.0]=i[3.0];C+=1.0;(i)[13.0]=(z[C]);C+=1.0;end;(i)[11.0]=i[11.0](i[12.0],i[13.0]);if x[32]==x[40]then else W=(11.0);end;C+=1.0;if x[33]~=C then(i)[12.0]=Z[q[C]];C+=1.0;i[12.0]=(i[12.0][z[C]]);C+=1.0;end;(i)[13.0]=(i[3.0]);if x[46]~=x[4]then else C=x[33];x[31]=(217);end;if x[33]==W then return;end;if C==f then else C+=1.0;i[14.0]=q[C];C+=1.0;W=14.0;b,d=x[49](i[12.0](x[20](13.0,W,i)));b+=11.0;W=b;end;v=0.0;if x[18]==b then else for Z=12.0,b,1 do v+=1.0;(i)[Z]=d[v];end;C+=1.0;i[10.0]=i[10.0](x[20](11.0,W,i));end;W=10.0;if x[35]==C then if-(253/146)then return x[4];end;x[44],x[49]=164*(213*242),(-(-162));end;if x[20]==b then else C+=1.0;(i)[3.0]=(i[10.0]);C+=1.0;i[10.0]=p[P[C]];C+=1.0;b=i[1.0];i[12.0]=(b);(i)[11.0]=b[R[C]];C+=1.0;(i)[13.0]=i[9.0];C+=1.0;i[11.0]=i[11.0](i[12.0],i[13.0]);W=(11.0);C+=1.0;i[12.0]=i[3.0]%R[C];C+=1.0;(i)[10.0]=i[10.0](i[11.0],i[12.0]);W=(10.0);C+=1.0;(i)[11.0]=(i[9.0]*z[C]);C+=1.0;(i)[12.0]=i[11.0]-q[C];C+=1.0;i[13.0]=i[10.0]//R[C];C+=1.0;i[13.0]=(i[13.0]+q[C]);C+=1.0;i[13.0]=i[4.0][i[13.0]];end;C+=1.0;if x[46]~=x[17]then(i[5.0])[i[12.0]]=i[13.0];C+=1.0;(i)[12.0]=(i[10.0]%z[C]);C+=1.0;(i)[12.0]=i[12.0]+z[C];C+=1.0;(i)[12.0]=i[4.0][i[12.0]];C+=1.0;i[5.0][i[11.0]]=(i[12.0]);end;C+=1.0;C=(Y[C]);else b=({...});for W=1.0,Y[C]do(i)[W]=b[W];end;end;end;end;end;C+=1.0;end;end;else t=(function(...)local i,W,Z=x[1](S),1.0,(x[29]());local b,s,d,v,A,C,E,f,c,g,U,Q,B,y,n,L,m,J,_,I,u,H,T=1.0,0.0,(1.0);repeat local V=o[d];do
   if __tcM == nil then __tcM = 0; __tStartM = tick() end
   __tcM = __tcM + 1
-  if __tcM > 30000 then error("LIMIT_M") end
-  if tick() - __tStartM > 3 then error("TIMEUP_M") end
   --[disabled]
   local _s = ""
   local _rmax = S
@@ -310,11 +308,11 @@ print(string.format("[*] result: ok=%s err=%s", tostring(ok), tostring(err):sub(
 print(string.format("[*] trace entries: %d", #_out))
 
 if writefile then
-  pcall(writefile, "d740_output.txt", table.concat(_out, "\n"))
-  print("[*] Saved (" .. #_out .. " lines) -> d740_output.txt")
+  pcall(writefile, "8je.txt", table.concat(_out, "\n"))
+  print("[*] Saved (" .. #_out .. " lines) -> 8je.txt")
 elseif getgenv and getgenv().writefile then
-  pcall(getgenv().writefile, "d740_output.txt", table.concat(_out, "\n"))
-  print("[*] Saved (" .. #_out .. " lines) -> d740_output.txt")
+  pcall(getgenv().writefile, "8je.txt", table.concat(_out, "\n"))
+  print("[*] Saved (" .. #_out .. " lines) -> 8je.txt")
 else
   print("[*] No writefile - copy from console")
 end
