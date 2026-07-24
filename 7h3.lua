@@ -125,12 +125,6 @@ local w=...;return({Y=unpack,X=coroutine,Xo=function(a,a)a=1.0;return a;end,b9=f
     local _gc = __gcount[g]
     _emit = true
     __gcount[g] = _gc + 1
-    -- Check if all opcodes sampled
-    local _allDone = true
-    for _gi = 0, 13 do
-      if __gcount[_gi] < 3 then _allDone = false; break end
-    end
-    if _allDone then __stopA = true end
     if _emit then
       __outN = __outN + 1
       __out[__outN] = string.format("OPR_A|%d|%d|%s|%s|%s|%s|%s|%s|%s", C, g, _M_, _P_, _Y_, _z, _q, _R, _s)
@@ -150,6 +144,7 @@ end;if g<7 then if not(g<3)then if x[41]~=x[42]then else return b;end;if g<5 the
     __vlog[#__vlog + 1] = "tcM=" .. __tcM .. " V=" .. V .. " d=" .. d
   end
   --[disabled]
+  local _s = ""
   local _rmax = S
   if type(_rmax) ~= "number" then _rmax = 50 end
   for _r = 1, _rmax do
