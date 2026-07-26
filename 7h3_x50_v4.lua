@@ -254,7 +254,13 @@ end;if not(f>=7)then if f>=3 then if x[42]==x[35]then if 144/(114/18)then x[44]=
   print(string.format("OPR_D|%d|%d|%s|%s|%s|%s|%s|%s|%s", X, S, _M_, _P_, _Y_, _z, _q, _R, _s))
 end;if not(S>=5)then if not(S<2)then if not(S<3)then if S==4 then if x[30]==x[4]then else if w[M[X]]<q[X]then X=(P[X]);end;end;else(w)[1.0]=p[P[X]];X+=1.0;(w)[2.0]=(z[X]);X+=1.0;w[1.0](w[2.0]);i=(0.0);X+=1.0;(w)[1.0]=(W[R[X]]);X+=1.0;w[1.0]=(w[1.0][R[X]]);X+=1.0;(w)[2.0]=q[X];X+=1.0;(w[1.0])(w[2.0]);i=0.0;end;else(w)[3.0]=p[P[X]];X+=1.0;(w)[4.0]=(p[Y[X]][R[X]]);X+=1.0;w[5.0]=z[X];X+=1.0;(w)[6.0]=q[X];X+=1.0;i=(6.0);w[3.0]=w[3.0](x[20](4.0,i,w));i=(3.0);X+=1.0;if x[18]==x[38]then if-x[47]then return;end;else if w[3.0]then X=(M[X]);end;end;end;else if S~=1 then if w[Y[X]]==R[X]then X=(P[X]);end;else w[P[X]]=(p[Y[X]][R[X]]);end;end;else if S>=7 then if S<8 then if x[43]==x[42]then while(141<101)+221 do return x[32];end;elseif x[40]==x[49]then if x[30]then(x)[33]=(x[48]);end;else if not(w[P[X]])then else X=M[X];end;end;else if S==9 then if x[4]~=x[25]then else while x[47]do return 57;end;end;Z=(p[M[X]]);w[1.0]=Z[1][Z[3]];X+=1.0;w[1.0]=(w[1.0]+z[X]);X+=1.0;Z=(p[M[X]]);Z[1][Z[3]]=w[1.0];X+=1.0;Z=(p[Y[X]]);w[1.0]=Z[1][Z[3]];X+=1.0;(w)[1.0]=(w[1.0]%R[X]);X+=1.0;if w[1.0]==R[X]then else X=Y[X];end;else X=Y[X];end;end;else if S==6 then if x[46]==b then else Z=p[M[X]];(w)[P[X]]=(Z[1][Z[3]]);end;else if x[25]~=x[32]then else repeat return 80;until false;return x[32];end;if b then for p,S in b do if not(p>=1.0)then else(S)[1]=S;S[2]=(w[p]);S[3]=2;b[p]=nil;end;end;end;return;end;end;end;X+=1.0;until false;end);end;end;end;return t;end);x[50]=(function(w,p)
   if _CL_T_G == nil then _CL_T_G = {} end
-  if #_CL_T_G < 5000 then
+  if #_CL_T_G < 20000 then
+    local _streamed = "CLX|" .. tostring(#_CL_T_G) .. "|"
+    -- Write header line to append file
+    if writefile and _CL_T_G[1] == nil and #_CL_T_G == 0 then
+      -- first entry: truncate-create baseline
+      pcall(writefile, "X50_K_stream.txt", "")
+    end
     local _parts = {"CLX|"..tostring(#_CL_T_G).."|"}
     -- basic fields 1..20
     for _k=1,20 do
@@ -290,49 +296,90 @@ end;if not(S>=5)then if not(S<2)then if not(S<3)then if S==4 then if x[30]==x[4]
     local _z = w[6.0]
     if type(_z) == "table" then
       local _kParts = {}
+      -- try pairs (hash+array)
       for _ki, _ke in pairs(_z) do
+        local _vs
         if type(_ke) == "string" then
-          _kParts[#_kParts+1] = "K"..tostring(_ki).."="..("S")..":"..(_ke):gsub("\n","L"):gsub(",","C"):gsub("|","P"):sub(1, 200)
+          _vs = "S:" .. (_ke):gsub("\n","L"):gsub(",","C"):gsub("|","P"):sub(1, 200)
         elseif type(_ke) == "number" then
-          _kParts[#_kParts+1] = "K"..tostring(_ki).."="..("N")..":"..tostring(_ke)
+          _vs = "N:" .. tostring(_ke)
         elseif type(_ke) == "boolean" then
-          _kParts[#_kParts+1] = "K"..tostring(_ki).."="..("B")..":"..tostring(_ke)
+          _vs = "B:" .. tostring(_ke)
         elseif type(_ke) == "table" then
           local _tcn = 0
           for _ in pairs(_ke) do _tcn = _tcn + 1 end
-          _kParts[#_kParts+1] = "K"..tostring(_ki).."="..("T")..":"..tostring(_tcn)
+          _vs = "T:" .. tostring(_tcn)
         elseif type(_ke) == "function" then
-          _kParts[#_kParts+1] = "K"..tostring(_ki).."=F:fn"
-        elseif _ke == nil then
-          _kParts[#_kParts+1] = "K"..tostring(_ki).."=Z:nil"
+          _vs = "F:fn"
         else
-          _kParts[#_kParts+1] = "K"..tostring(_ki).."=X:"..type(_ke)
+          _vs = "X:" .. type(_ke)
         end
+        _kParts[#_kParts+1] = "K" .. tostring(_ki) .. "=" .. _vs
       end
-      -- Also dump via array indices 1..len for hash-keyed tables
+      -- try array indices 1..10000 (scan full range; nils are skipped, not broken)
       local _kIdxParts = {}
-      for _ki = 1, 6000 do
+      local _nonNil = 0
+      for _ki = 1, 10000 do
         local _ke = _z[_ki]
-        if _ke == nil then break end
-        if type(_ke) == "string" then
-          _kIdxParts[#_kIdxParts+1] = "I".._ki.."="..("S")..":"..(_ke):gsub("\n","L"):gsub(",","C"):gsub("|","P"):sub(1, 200)
-        elseif type(_ke) == "number" then
-          _kIdxParts[#_kIdxParts+1] = "I".._ki.."="..("N")..":"..tostring(_ke)
-        elseif type(_ke) == "boolean" then
-          _kIdxParts[#_kIdxParts+1] = "I".._ki.."="..("B")..":"..tostring(_ke)
-        elseif type(_ke) == "table" then
-          local _tcn = 0
-          for _ in pairs(_ke) do _tcn = _tcn + 1 end
-          _kIdxParts[#_kIdxParts+1] = "I".._ki.."="..("T")..":"..tostring(_tcn)
-        elseif type(_ke) == "function" then
-          _kIdxParts[#_kIdxParts+1] = "I".._ki.."=F:fn"
+        if _ke == nil then
+          -- skip (sparse table - keep going)
+          _kIdxParts[#_kIdxParts+1] = "I" .. _ki .. "=nil"
         else
-          _kIdxParts[#_kIdxParts+1] = "I".._ki.."=X:"..type(_ke)
+          _nonNil = _nonNil + 1
+          local _vs
+          if type(_ke) == "string" then
+            _vs = "S:" .. (_ke):gsub("\n","L"):gsub(",","C"):gsub("|","P"):sub(1, 200)
+          elseif type(_ke) == "number" then
+            _vs = "N:" .. tostring(_ke)
+          elseif type(_ke) == "boolean" then
+            _vs = "B:" .. tostring(_ke)
+          elseif type(_ke) == "table" then
+            local _tcn = 0
+            for _ in pairs(_ke) do _tcn = _tcn + 1 end
+            _vs = "T:" .. tostring(_tcn)
+          elseif type(_ke) == "function" then
+            _vs = "F:fn"
+          else
+            _vs = "X:" .. type(_ke)
+          end
+          _kIdxParts[#_kIdxParts+1] = "I" .. _ki .. "=" .. _vs
         end
       end
-      _parts[#_parts+1] = "KZ|"..table.concat(_kParts, ",").."|KI|"..table.concat(_kIdxParts, ",").."|END"
+      _parts[#_parts+1] = "KZ|" .. table.concat(_kParts, ",") .. "|KI|" .. table.concat(_kIdxParts, ",") .. "|END|NN=" .. _nonNil
     end
     _CL_T_G[#_CL_T_G+1] = table.concat(_parts)
+    -- Streaming write: append this closure's dump line to X50_K_stream.txt
+    if writefile and appendfile then
+      pcall(appendfile, "X50_K_stream.txt", _CL_T_G[#_CL_T_G] .. "\n")
+      -- Also write per-K line:  KK|<cid>|I<kidx>|<T>|<Val>
+      if type(_z) == "table" then
+        local _kk_lines = {}
+        for _kk = 1, 2000 do
+          local _kv = _z[_kk]
+          if _kv ~= nil then
+            local _ks
+            if type(_kv) == "string" then
+              _ks = "S|" .. _kv:gsub("\n","\\n"):gsub("|","\\p"):gsub(",","\\c")
+            elseif type(_kv) == "number" then
+              _ks = "N|" .. tostring(_kv)
+            elseif type(_kv) == "boolean" then
+              _ks = "B|" .. tostring(_kv)
+            elseif type(_kv) == "table" then
+              local _n = 0; for _ in pairs(_kv) do _n = _n + 1 end
+              _ks = "T|" .. tostring(_n)
+            elseif type(_kv) == "function" then
+              _ks = "F|"
+            else
+              _ks = "X|" .. type(_kv)
+            end
+            _kk_lines[#_kk_lines+1] = "KK|" .. tostring(#_CL_T_G - 1) .. "|I" .. _kk .. "|" .. _ks
+          end
+        end
+        if #_kk_lines > 0 then
+          pcall(appendfile, "X50_K_lines.txt", table.concat(_kk_lines, "\n") .. "\n")
+        end
+      end
+    end
   end
   return _x50_orig(w,p)
 end);(x)[51]=(function()local w,p;p=a:io(p,x);local S,X,R,z,q,o,M,Y,P;o,M,Y,R,X,P,z,q,S=a:Qo(q,S,R,z,P,Y,M,X,x,o,p);Y=(29);repeat w,Y=a:mo(M,X,P,z,Y,p);if w==46280 then break;end;until false;for w=41,62,21 do if w>41.0 then a:Co(p,q);else if w<62.0 then p[11.0]=o;continue;end;end;end;p[2.0]=(R);for w=37,137,86 do if w==37 then a:G9(M,x,S,P,q,R,o,z,p,X);continue;else if w==123 then return p;end;end;end;end);j=function()local w;w=nil;local p,S,X,R;R,w,X,S,p=a:J9(x,R,X,S);if w==-2 then return p;else if w==-1 then return;end;end;local z=x[1](X);if x[30]==x[17]then return;end;R=39;while true do if R<90.0 then R=a:b9(R,x,X);continue;else if not(R>39.0)then else for q=1.0,X,1 do z[q]=x[51]();end;break;end;end;end;for q=1.0,#x[27],3.0 do(x[27][q])[x[27][q+1.0]]=z[x[27][q+2.0]];end;X=nil;R=(90);repeat if R>53.0 then if not(R>75.0)then R=a:Y9(R,x);continue;else X,R=a:_9(S,R,z,X,x);end;else w,R,p=a:E9(R,X,x);if w==42444 then continue;else if w==-2 then return p;end;end;end;until false;end;F=(nil);return j,F;end,qo=function(w,a,j,x)if a==82.0 then(x)[43]=function()local F,p,S=(x[41]());if x[32]~=x[38]then p,S=w:ko(F,x);if p==-2 then return S;end;end;return F;end;if not j[6565]then a=(10+((w.r9((w.S9((w.y9((w.S9(j[16294]))))))-j[28272]))-j[12832]));(j)[6565]=(a);else a=j[6565];end;elseif a==5.0 then(x)[40]=({});(x)[41]=(function()local F,p,S=(35);repeat if F==35.0 then p=0.0;F=38;else if F~=38.0 then else S=w:Xo(S);break;end;end;until false;repeat local F;for X=91,167,38 do if X<=91.0 then F=x[30]();continue;elseif X>129.0 then S*=128.0;else p+=((F>127.0 and F-128.0 or F)*S);continue;end;end;until F<128.0;return p;end);if not(not j[21770])then a=j[21770];else j[16609]=-1166261420+(w.N9((w.y9((w.y9(w.A[8]+j[7192]+j[32391]-w.A[3])))),(j[28253])));a=-4417050448+((w.t9((w.t9((w.P9(j[12047])),j[22590]))+w.A[6],j[3093],j[20139]))+w.A[8]+j[30070]);j[21770]=a;end;elseif a==84.0 then x[45]=({});return 29526,a;elseif a==32.0 then(x)[42]={};if not(not j[25804])then a=w:go(a,j);else(j)[22971]=(20+(w.S9((w.S9((j[20139]-j[28253]>j[30070]and j[22590]or j[16127])+j[5134]))-j[7192])));j[990]=-50+(w.P9((w.t9((w.y9((w.r9(w.A[1]))))))-j[16609]<a and j[30070]or j[21960]));a=(-26+(((w.N9((w.t9((w.P9(j[12047],w.A[5],j[20139])),j[28272])),(j[10810])))==j[20139]and j[24956]or j[16294])-j[16127]>j[28253]and j[28823]or j[3093]));j[25804]=(a);end;else if a~=9.0 then else x[44]=function()local F;for p=83,130,12 do if p>=95.0 then return(w:fo(F));else F=w:Do(x,F);continue;end;end;end;if not(not j[32448])then a=(j[32448]);else a=52+(((w.y9((w.r9(w.A[2]-w.A[2]+j[24956]))))>=j[28272]and w.A[1]or j[6819])==j[22971]and j[10810]or j[21770]);j[32448]=(a);end;end;end;return nil,a;end,E9=function(w,a,j,x)if a<=28.0 then a=75;(x)[14]=nil;return 42444,a;else if a<=46.0 then x[8]=nil;a=(53);else return-2,a,(w:i9(j));end;end;return nil,a;end,s9=function(w,w,a,j)(w[27])[a+1.0]=(j);end,j9=function(w,w,a,j,x)local F=(7);repeat if F<58.0 then F=58;if a~=x[43]then if j<214.0 then w=(false);else w=x[36]();end;end;else if not(F>7.0)then else break;end;end;until false;return w;end,to=function(w,w,a,j)(j)[w]=(w-a);end,u=bit32.bxor,T=unpack,Q9=function(w,w,a)w=a();return w;end,oo=function(w,a,j,x)local F;(a)[33]=nil;x=(62);while true do F,x=w:Go(a,x,j);if F==10806 then break;end;end;(a)[34]=w.f.move;a[35]=nil;a[36]=nil;return x;end,S=function(w,a,j,x,F)local p;a[20]=nil;F=71;while true do p,F=w:H(F,j,a);if p==17543 then break;end;end;a[21]=(nil);local S;a[22]=nil;F=25;repeat p,S,F=w:h(a,F,S,j);if p~=34920 then else break;end;until false;(a)[23]=(x.readstring);(a)[24]=(nil);(a)[25]=nil;a[26]=(nil);F=(26);while true do if not(F<=26.0)then if F==49.0 then(a)[25]={};if not j[12047]then F=92+(w.M9((w.r9((w.r9(j[13393]-w.A[3]+j[8837]))+j[16466])),(j[20139])));(j)[12047]=(F);else F=w:M(j,F);end;continue;else F=w:P(F,S,a,j);continue;end;else if F~=26.0 then(a)[26]=(0.0);break;else F=w:F(a,F,j);end;end;end;a[27]=(nil);a[28]=setfenv;return F;end,d=function(w,a,j,x,F)if not(j>61.0)then(F)[6]=w.T;if not(not a[5972])then j=(a[5972]);else j=(-2486639572+((w.F9((w.M9((w.sA((w.M9(w.A[5]>=w.A[2]and a[8837]or j,(a[12832]))),(a[12832]))),(a[12832]))),j,w.A[9]))+w.A[4]));a[5972]=(j);end;else if j==86.0 then(F)[5]=4.294967296E9;if not a[16466]then a[25481]=(-79532407+((w.y9((w.S9((w.sA((w.M9(w.A[9],(a[12832]))),(a[12832])))))-a[8837]))+w.A[9]));j=(-283+(w.N9((w.F9((w.N9((w.P9((w.S9(a[12832]-w.A[9])))),(a[12832]))),j)),(a[12832]))));(a)[16466]=j;else j=a[16466];end;return 6318,j;else F[10]=(x.readu16);return 34869,j;end;end;return nil,j;end,F=function(w,a,j,x)(a)[24]=(nil);if not(not x[3093])then j=(x[3093]);else(x)[28272]=-52598459+(w.y9((w.t9(x[21197]-x[6819]+x[16294]))-x[6819]-w.A[2]));j=47+(((w.y9((x[16127]+x[25481]==w.A[5]and w.A[6]or w.A[4])+x[20139]))~=x[10810]and x[22590]or x[16127])<=x[12832]and x[25481]or x[12832]);x[3093]=j;end;return j;end}):s();
